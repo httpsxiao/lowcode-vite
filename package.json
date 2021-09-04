@@ -5,7 +5,8 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview",
-    "lint": "eslint ./src --ext .vue,.js,.ts,.tsx"
+    "lint": "eslint ./src --ext .vue,.js,.ts,.tsx",
+    "app": "node ./mock/app.js"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
@@ -26,6 +27,8 @@
     "@vue/compiler-sfc": "^3.0.5",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^7.16.0",
+    "koa": "^2.13.1",
+    "koa-router": "^10.1.1",
     "lint-staged": "^11.1.2",
     "path": "^0.12.7",
     "stylus": "^0.54.8",

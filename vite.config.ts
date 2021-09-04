@@ -25,5 +25,14 @@ export default defineConfig({
         }
       }]
     })
-  ]
+  ],
+  server: {
+    proxy: {
+      '/api/componentList': {
+        target: 'http://localhost:4321',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/api/, '')
+      }
+    }
+  }
 })
