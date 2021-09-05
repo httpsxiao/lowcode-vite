@@ -26,6 +26,17 @@ components.forEach(component => {
   app.component(component.name, component)
 })
 
-app.use(router).use(store)
+app.use(router).use(store, key)
+
+fetch('/api/componentList')
+  .then(response => {
+    return response.json()
+  })
+  .then(data => {
+    store.commit('setState', {
+      key: 'componentList',
+      value: data.list
+    })
+  })
 
 router.isReady().then(() =>  app.mount('#app'))
