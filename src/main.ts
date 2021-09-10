@@ -38,5 +38,5 @@ fetch('/api/componentList')
       value: data.list
     })
   })
-
-router.isReady().then(() =>  app.mount('#app'))
+  .then(() => router.isReady())
+  .then(() =>  app.mount('#app'))

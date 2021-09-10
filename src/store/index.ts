@@ -1,8 +1,16 @@
 import { InjectionKey } from 'vue'
 import { createStore, Store } from 'vuex'
 
+export interface ProjectDataIns {
+  scaleX: number,
+  scaleY: number,
+  width: number,
+  height: number
+}
+
 export interface State {
   count: number,
+  projectData: ProjectDataIns,
   componentList: any[]
 }
 
@@ -14,7 +22,13 @@ export default createStore<State>({
   state() {
     return {
       count: 0,
-      componentList: []
+      componentList: [],
+      projectData: {
+        scaleX: 1,
+        scaleY: 1,
+        width: 375,
+        height: 500
+      }
     }
   },
   getters: {
@@ -23,13 +37,13 @@ export default createStore<State>({
     }
   },
   mutations: {
-    increment(state) {
-      state.count++
+    setState(state, { key, value }) {
+      state[key as keyof State] = value
     }
   },
   actions: {
-    increment(context) {
-      context.commit('increment')
+    setState(context, payload) {
+      context.commit('setState', payload)
     }
   }
 })

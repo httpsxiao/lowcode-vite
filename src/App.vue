@@ -11,7 +11,13 @@ export default defineComponent({
 </script>
 
 <style>
-html, body {
+html, body, #app {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+* {
   margin: 0;
   padding: 0;
 }
