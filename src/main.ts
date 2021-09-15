@@ -10,6 +10,9 @@ import {
   ElFooter,
   ElButton
 } from 'element-plus'
+import {
+  LibButton
+} from './library'
 
 const app = createApp(App)
 
@@ -19,7 +22,8 @@ const components = [
   ElAside,
   ElMain,
   ElFooter,
-  ElButton
+  ElButton,
+  LibButton
 ]
 
 components.forEach(component => {
