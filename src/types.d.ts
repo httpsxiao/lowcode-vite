@@ -1,13 +1,16 @@
+type PointType = 'tl'|'tr'|'bl'|'br'|'l'|'r'|'t'|'b'
+
 interface ComponentConfig {
   elName: string,
+  uuid?: string,
   title: string,
   icon: string,
-  pointList: string[],
+  points: PointType[],
   contenteditable: boolean,
   options: {
     classList: string[]
   },
-  commonStyle: {
+  style: {
     position: 'absolute'
     top: number
     left: number
@@ -20,4 +23,10 @@ interface ComponentConfig {
     textAlign: string
   },
   propsValue: Record<string, string>
+}
+
+interface SetElementPositionIns {
+  uuid: string,
+  top: number,
+  left: number
 }
