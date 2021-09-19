@@ -6,23 +6,22 @@ const defaultStyle = {
 
 module.exports = {
   list: [{
-    elName: 'el-button',
+    elName: 'lib-button',
     title: '按钮',
     icon: '',
-    pointList: ['lt', 'rt', 'lb', 'rb', 'l', 'r', 't', 'b'],
+    points: ['tl', 'tr', 'bl', 'br', 'l', 'r', 't', 'b'],
     contenteditable: false,
     options: {
       classList: []
     },
-    commonStyle: {
+    style: {
       ...defaultStyle,
-      padding: 8,
-      fontSize: 15,
-      lineHeight: 17,
-      width: 160,
-      height: 20,
+      fontSize: 20,
+      lineHeight: 50,
+      width: 100,
+      height: 50,
       minWidth: 35,
-      textAlign: 'left'
+      textAlign: 'center'
     },
     propsValue: {}
   }]
