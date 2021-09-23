@@ -1,19 +1,29 @@
 <template>
   <el-container>
-    <el-header height="100px"></el-header>
-    <el-container>
-      <el-aside width="300px">Aside</el-aside>
-      <el-main>Main</el-main>
-    </el-container>
-    <el-footer height="50px"></el-footer>
+    <el-header height="50px"></el-header>
+    <el-main class="main">
+      <div class="select-container">
+        <Select></Select>
+      </div>
+      <div class="editor-container">
+        <Editor></Editor>
+      </div>
+    </el-main>
+    <el-footer height="30px"></el-footer>
   </el-container>
 </template>
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue'
+import Editor from './layout/Editor.vue'
+import Select from './layout/Select.vue'
 
 export default defineComponent({
   name: 'Index',
+  components: {
+    Select,
+    Editor
+  },
   setup: () => {
     const count = ref(0)
     return { count }
@@ -21,20 +31,20 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-a {
-  color: #42b983;
-}
+<style scoped lang="stylus">
+.el-container
+  height 100%
+  .el-header
+    border-bottom 1px solid rgba(0,0,0,.1)
+  .el-footer
+    border-top 1px solid rgba(0,0,0,.1)
+  .main
+    display flex
+    padding 0
+    .select-container
+      width 300px
+      border-right 1px solid rgba(0,0,0,.1)
+    .editor-container
+      flex 1
 
-label {
-  margin: 0 0.5em;
-  font-weight: bold;
-}
-
-code {
-  background-color: #eee;
-  padding: 2px 4px;
-  border-radius: 4px;
-  color: #304455;
-}
 </style>
