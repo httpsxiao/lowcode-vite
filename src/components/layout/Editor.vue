@@ -9,8 +9,8 @@
           @dragover.prevent
           @drop="onDrop"
         >
-          <div class="single" v-for="el in elements" :key="el.uuid">
-            
+          <div v-for="el in elements" :key="el.uuid" class="single">
+            <component-panel :comp="el" @updatePosition="updatePosition"></component-panel>
           </div>
         </div>
       </div>
