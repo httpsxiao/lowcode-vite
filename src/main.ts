@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import router from './router'
 import store, { key } from './store'
+import { createToast } from './plugins/toast'
 import App from './App.vue'
 import {
   ElContainer,
@@ -31,6 +32,9 @@ components.forEach(component => {
 })
 
 app.use(router).use(store, key)
+
+const toast = createToast()
+app.use(toast)
 
 fetch('/api/componentList')
   .then(response => {
