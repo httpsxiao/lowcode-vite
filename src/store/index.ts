@@ -50,15 +50,14 @@ export default createStore<State>({
     setActiveElementUuid(state, uuid = '') {
       state.projectData.activeElementUuid = uuid
     },
-    setElementPosition(state, data: SetElementPositionIns) {
-      const { uuid, top, left } = data
+    setElementPosition(state, payload: SetElementPositionIns) {
+      const { uuid, data } = payload
       const elements = state.projectData.elements
       for (let i = 0; i < elements.length; i++) {
         if (uuid === elements[i].uuid) {
           elements[i].style = {
             ...elements[i].style,
-            top,
-            left
+            ...data
           }
           break
         }

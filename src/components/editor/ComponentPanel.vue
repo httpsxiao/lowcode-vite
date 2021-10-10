@@ -11,6 +11,15 @@
       :style="computedStyle"
       :props-value="comp.propsValue"
     ></component>
+
+    <!-- 拖动点 -->
+    <div
+      v-for="item in computedPoints"
+      :key="item"
+      class="point"
+      :style="getPointStyle(item)"
+      @mousedown.stop.prevent="onPointMousedown(item, $event)"
+    ></div>
   </div>
 </template>
 
@@ -28,7 +37,7 @@ const direction = { t: 'n', b: 's', l: 'w', r: 'e' }
 export default defineComponent({
   props: {
     comp: {
-      type: Object,
+      type: Object as () => ComponentConfig,
       default: () => ({})
     }
   },
@@ -47,8 +56,8 @@ export default defineComponent({
       let res = ''
 
       for (let i = 0; i < attrs.length; i++) {
-        const k = attrs[i]
-
+        const k = attrs[i] as keyof ComponentConfig['style']
+        
         if (
           (isOuter && !outerAttrs.includes(k)) ||
           (!isOuter && outerAttrs.includes(k))
@@ -66,28 +75,127 @@ export default defineComponent({
       return res
     }
 
+    // 获取 point 点
+    const computedPoints = computed(() => {
+      const comp = props.comp
+      if (comp.uuid !== store.getters.activeElementUuid) {
+        return []
+      }
+      return comp.points || []
+    })
+
+    // 计算每个 point 的位置和 cursor
+    function getPointStyle(point: PointType): Record<string, string | number> {
+      const { width, height } = props.comp.style
+      const hasT = point.includes('t') // 上
+      const hasB = point.includes('b') // 下
+      const hasL = point.includes('l') // 左
+      const hasR = point.includes('r') // 右
+
+      let newTop = 0
+      let newLeft = 0
+
+      // 两个方向
+      if (point.length === 2) {
+        newLeft = hasL ? 0 : width
+        newTop = hasT ? 0 : height
+      } else {
+        if (hasT || hasB) {
+          newTop = hasT ? 0 : height
+          newLeft = width / 2
+        }
+
+        if (hasL || hasR) {
+          newLeft = hasL ? 0 : width
+          newTop = height / 2
+        }
+      }
+
+      return {
+        top: `${newTop}px`,
+        left: `${newLeft}px`,
+        marginTop: (hasT || hasB) ? '-4px' : 0,
+        marginLeft: (hasL || hasR) ? '-4px' : 0,
+        cursor: (point.split('') as DirectionType[]).map(m => direction[m]).join('') + '-resize'
+      }
+    }
+
     // 外层鼠标按下事件
     function onComponentMousedown(e: MouseEvent) {
-      const comp = props.comp
+      const { uuid, style: { top, left } } = props.comp
 
       // 设置当前组件
-      store.commit('setActiveElementUuid', comp.uuid)
+      store.commit('setActiveElementUuid', uuid)
 
       const startY = e.clientY
       const startX = e.clientX
-      const startTop = comp.style.top
-      const startLeft = comp.style.left
 
-      const move = (e: MouseEvent) => {
-        e.stopPropagation()
-        e.preventDefault()
+      const move = (moveEvent: MouseEvent) => {
+        moveEvent.preventDefault()
 
-        const currX = e.clientX
-        const currY = e.clientY
-        const top = currY - startY + startTop
-        const left = currX - startX + startLeft
+        const currX = moveEvent.clientX
+        const currY = moveEvent.clientY
+        const newTop = currY - startY + top
+        const newLeft = currX - startX + left
 
-        context.emit('updatePosition', { uuid: comp.uuid, top, left })
+        context.emit('updatePosition', {
+          uuid,
+          data: { top: newTop, left: newLeft }
+        })
+      }
+
+      const up = () => {
+        document.removeEventListener('mousemove', move, true)
+        document.removeEventListener('mouseup', up, true)
+      }
+
+      document.addEventListener('mousemove', move, true)
+      document.addEventListener('mouseup', up, true)
+    }
+
+    function onPointMousedown(point: PointType, e: MouseEvent) {
+      const { uuid, style, config } = props.comp
+      const {
+        top,
+        left,
+        width,
+        height,
+        lineHeight,
+        minWidth = 0,
+        minHeight = 0
+      } = style
+
+      const startY = e.clientY
+      const startX = e.clientX
+
+      const move = (moveEvent: MouseEvent) => {
+        moveEvent.preventDefault()
+
+        const disY = moveEvent.clientY - startY
+        const disX = moveEvent.clientX - startX
+        const hasT = point.includes('t') // 上
+        const hasB = point.includes('b') // 下
+        const hasL = point.includes('l') // 左
+        const hasR = point.includes('r') // 右
+        const newWidth = width + (hasL ? -disX : hasR ? disX : 0)
+        const newHeight = height + (hasT ? -disY : hasB ? disY : 0)
+        const newLineHeight = config.lineHeightSame ? newHeight : lineHeight
+        const newTop = top + (hasT ? disY : 0)
+        const newLeft = left + (hasL ? disX : 0)
+
+        if (newWidth < minWidth) return
+        if (newHeight < minHeight) return
+
+        context.emit('updatePosition', {
+          uuid,
+          data: {
+            top: newTop,
+            left: newLeft,
+            width: newWidth,
+            height: newHeight,
+            lineHeight: newLineHeight
+          }
+        })
       }
 
       const up = () => {
@@ -100,9 +208,12 @@ export default defineComponent({
     }
 
     return {
+      computedPoints,
       computedStyle,
       computedOuterStyle,
-      onComponentMousedown
+      getPointStyle,
+      onComponentMousedown,
+      onPointMousedown
     }
   }
 })
@@ -114,8 +225,8 @@ export default defineComponent({
   .point
     position absolute
     z-index 3000
-    width 4px
-    height 4px
+    width 6px
+    height 6px
     background-color #fff
     border 1px solid #79bbff
 </style>
