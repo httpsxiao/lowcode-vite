@@ -24,26 +24,6 @@ import { key } from '@/store'
 import createNonElement from '@/utils/createNonElement'
 import ComponentPanel from '../editor/ComponentPanel.vue'
 
-function toggleStatus() {
-  const isEnter = ref(false)
-  const onDragenter = () => {
-    isEnter.value = true
-  }
-  const onDragleave = () => {
-    isEnter.value = false
-  }
-  const setStatus = (val: boolean) => {
-    isEnter.value = val
-  }
-
-  return {
-    isEnter,
-    onDragenter,
-    onDragleave,
-    setStatus
-  }
-}
-
 export default defineComponent({
   name: 'Editor',
   components: {
@@ -95,6 +75,26 @@ export default defineComponent({
     }
   }
 })
+
+function toggleStatus() {
+  const isEnter = ref(false)
+  const onDragenter = () => {
+    isEnter.value = true
+  }
+  const onDragleave = () => {
+    isEnter.value = false
+  }
+  const setStatus = (val: boolean) => {
+    isEnter.value = val
+  }
+
+  return {
+    isEnter,
+    onDragenter,
+    onDragleave,
+    setStatus
+  }
+}
 </script>
 
 <style lang="stylus" scoped>

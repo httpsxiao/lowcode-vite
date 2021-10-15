@@ -13,8 +13,9 @@ export default function createNonElement(name: string, style?: Record<string, st
     elName: name,
     uuid: createUuid(),
     points: ['tl', 'tr', 'bl', 'br', 'l', 'r', 't', 'b'],
-    contenteditable: false,
-    options: {
+    config: {
+      contenteditable: true,
+      lineHeightSame: true,
       classList: []
     },
     style: {
