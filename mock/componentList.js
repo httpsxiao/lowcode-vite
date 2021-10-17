@@ -10,8 +10,9 @@ module.exports = {
     title: '按钮',
     icon: '',
     points: ['tl', 'tr', 'bl', 'br', 'l', 'r', 't', 'b'],
-    contenteditable: false,
-    options: {
+    config: {
+      contenteditable: true,
+      lineHeightSame: true,
       classList: []
     },
     style: {
